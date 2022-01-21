@@ -1,28 +1,73 @@
 package com.dxc.assessment.dao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import com.dxc.assessment.modal.Author;
 
 public class AuthorDaoImpl implements AuthorDao{
 
-    @Override
-    public Author create(Author author) {
-        return null;
+    private static final String INSERT_ONE_AUTHORS;
+    private static final String SELECT_ALL_AUTHORS;
+    private static final String USER_NAME;
+    private static final String PASSWORD;
+    private static final String URL;
+
+
+    static{
+        INSERT_ONE_AUTHORS= " INSERT INTO authors(id,firstName,lastname,genre,email) VALUES ('9494','anil','balireddy','ethical','anilbalireddy6969@gmail.com')";
+        SELECT_ALL_AUTHORS=" SELECT * FROM authors";
+
+        USER_NAME="root";
+        PASSWORD="Password";
+        URL="jdbc:mysql://localhost:3306/dxc";
     }
 
     @Override
-    public Author findById(Long id) {
-        return null;
-    }
+    public Author create(Author author) throws SQLException {
+        System.out.println("saving author: "+author);
 
-    @Override
-    public List<Author> findByGenre(String genre) {
-        return null;
-    }
+        //get a connection using drivermanager
+        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        PreparedStatement ps=connection.prepareStatement(INSERT_ONE_AUTHORS);
 
-    @Override
-    public List<Author> findAll() {
-        return null;
+        ps.setString(1, author.getFirstName());
+        
+        ps.setString(2, author.getLastName());
+        ps.setString(3, author.getGenre());
+        ps.setString(4, author.getEmail());
+        ps.close();
+        connection.close();
+        return author;
+}
+@Override
+public Author findById(Long id) {
+
+    return null;
+}
+
+@Override
+public List<Author> findByGenre(String genre) {
+    return null;
+}
+
+@Override
+public List<Author> findAll() throws SQLException{
+    List<Author> author = null;
+    Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+    Statement statement = connection.createStatement();
+    ResultSet rs = statement.executeQuery(SELECT_ALL_AUTHOR);
+    author = new ArrayList();
+    while (rs.next()) {
+        author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
     }
+    rs.close();
+    statement.close();
+    connection.close();
+    return author;
+    
+}
     
 }

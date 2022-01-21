@@ -15,23 +15,23 @@ public class App
 {
     public static void main( String[] args )
     {
-        findAllAuthor();
-    }
-    static void findAllAuthor(){
+        System.out.println( "Hello World!" );
+        Author anil = new Author("'9494','anil','balireddy','ethical','anilbalireddy6969@gmail.com'");
         
-        AuthorDao dao = new AuthorDao(); 
 
-            
-        try {
-            List<Author> author= dao.findAll();
-            if (author.size() == 0) {
-                System.out.println("No author found");
-                return;
+        List<Author> author = List.of(anil);
+        AuthorDao authorDao = new AuthorDao();
+
+        author.forEach(au-> {
+            try {
+                Author rows = authorDao.create(au);
+                System.out.println("Rows affected: " + rows);
+            } catch (SQLDataException e) {
+                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
-            author.forEach(au -> System.out.println(au));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println(e.getMessage());
-        }
+        });
+        
     }
+    
 }
